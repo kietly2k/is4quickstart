@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityServerHost.Quickstart.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,16 +18,22 @@ namespace IdentityServer
         {
             Environment = environment;
         }
-
+        /*
+         Similar to OAuth 2.0, OpenID Connect also uses the scopes concept. 
+         Again, scopes represent something you want to protect and that clients want to access. 
+         In contrast to OAuth, scopes in OIDC don’t represent APIs, but identity data like user id, name or email address.
+        */
         public void ConfigureServices(IServiceCollection services)
         {
             // uncomment, if you want to add an MVC-based UI
-            //services.AddControllersWithViews();
+            services.AddControllersWithViews();
 
             var builder = services.AddIdentityServer()
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients);
+                .AddInMemoryIdentityResources(Config.IdentityResources) // OpenID scopes
+                .AddInMemoryApiScopes(Config.ApiScopes) // OAuth 2.0 scopes
+                .AddInMemoryClients(Config.Clients)
+                .AddTestUsers(TestUsers.Users)
+            ;
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
@@ -40,17 +47,17 @@ namespace IdentityServer
             }
 
             // uncomment if you want to add MVC
-            //app.UseStaticFiles();
-            //app.UseRouting();
-            
+            app.UseStaticFiles();
+            app.UseRouting();
+
             app.UseIdentityServer();
 
             // uncomment, if you want to add MVC
-            //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapDefaultControllerRoute();
-            //});
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
