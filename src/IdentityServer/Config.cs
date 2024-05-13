@@ -23,7 +23,11 @@ namespace IdentityServer
             {
                 new ApiScope("api1", "My API")
             };
-
+        
+        /*
+            You can think of the ClientId and the ClientSecret as the login and password for your application itself. 
+            It identifies your application to the identity server so that it knows which application is trying to connect to it.
+        */
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {
@@ -31,9 +35,13 @@ namespace IdentityServer
                 new Client
                 {
                     ClientId = "client",
+
+                     // secret for authentication
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
+                    // no interactive user, use the clientid/secret for authentication
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    
                     // scopes that client has access to
                     AllowedScopes = { "api1" }
                 },
@@ -51,6 +59,9 @@ namespace IdentityServer
 
                     // where to redirect to after logout
                     PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+
+                    // we enable support for refresh tokens via the AllowOfflineAccess property
+                    AllowOfflineAccess = true,
 
                     AllowedScopes = new List<string>
                     {
