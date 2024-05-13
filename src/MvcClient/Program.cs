@@ -30,10 +30,14 @@ builder.Services.AddAuthentication(options =>
     options.ClientSecret = "secret";
     options.ResponseType = "code";
 
-    options.Scope.Add("profile");
     options.GetClaimsFromUserInfoEndpoint = true;
 
+    // Since SaveTokens is enabled, ASP.NET Core will automatically store the resulting access and refresh token in the authentication session
     options.SaveTokens = true;
+
+    options.Scope.Add("profile");
+    options.Scope.Add("api1");
+    options.Scope.Add("offline_access");
 });
 
 var app = builder.Build();

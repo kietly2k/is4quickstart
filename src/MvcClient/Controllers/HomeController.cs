@@ -1,6 +1,10 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication;
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using MvcClient.Models;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace MvcClient.Controllers;
 
@@ -21,6 +25,18 @@ public class HomeController : Controller
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    public async Task<IActionResult> CallApi()
+    {
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var content = await client.GetStringAsync("https://localhost:6001/identity");
+
+        ViewBag.Json = JsonSerializer.Deserialize<JsonArray>(content)?.ToString();
+        return View("json");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
