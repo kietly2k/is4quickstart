@@ -1,9 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authentication
-@{
-    ViewData["Title"] = "Home Page";
-}
-<button></button>
+
 <h2>Claims</h2>
+
 <dl>
     @foreach (var claim in User.Claims)
     {
