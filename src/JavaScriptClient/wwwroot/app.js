@@ -18,7 +18,7 @@ document.getElementById("logout").addEventListener("click", logout, false);
 
 /*
     Next, we can use the UserManager class from the oidc-client library to manage the OpenID Connect protocol. 
-    It requires similar configuration that was necessary in the MVC Client 
+    It requires similar configuration that was necessary in the MVC Client
 */
 var config = {
     authority: "https://localhost:5001",

@@ -23,10 +23,10 @@ namespace IdentityServer
             {
                 new ApiScope("api1", "My API")
             };
-        
+
         /*
-            You can think of the ClientId and the ClientSecret as the login and password for your application itself. 
-            It identifies your application to the identity server so that it knows which application is trying to connect to it.
+            You can think of the ClientId and the ClientSecret as the login and password for your application itself.
+            Register client to Identity Server. It identifies your application to the identity server so that it knows which application is trying to connect to it.
         */
         public static IEnumerable<Client> Clients =>
             new List<Client>
@@ -64,6 +64,25 @@ namespace IdentityServer
                     AllowOfflineAccess = true,
 
                     AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    }
+                },
+                // JavaScript Client
+                new Client
+                {
+                    ClientId = "js",
+                    ClientName = "JavaScript Client",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+
+                    RedirectUris =           { "https://localhost:5003/callback.html" },
+                    PostLogoutRedirectUris = { "https://localhost:5003/index.html" },
+                    AllowedCorsOrigins =     { "https://localhost:5003" },
+
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
